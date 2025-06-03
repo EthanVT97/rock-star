@@ -27,6 +27,10 @@ class ProxyServer {
         this.app.use(express.json({ limit: config.server.bodyLimit }));
         this.app.use(express.urlencoded({ extended: true, limit: config.server.bodyLimit }));
 
+        // Serve static files from public directory
+        this.app.use('/admin', express.static('public'));
+        this.app.use(express.static('public'));
+
         // Request logging middleware
         this.app.use(requestLogger);
 
