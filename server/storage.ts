@@ -185,17 +185,22 @@ export class DatabaseStorage implements IStorage {
   async getApiAnalytics(endpoint?: string, days = 7): Promise<ApiAnalytic[]> {
     const cutoffTime = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     
-    let query = db
+    if (endpoint) {
+      return await db
+        .select()
+        .from(apiAnalytics)
+        .where(and(
+          gte(apiAnalytics.date, cutoffTime),
+          eq(apiAnalytics.endpoint, endpoint)
+        ))
+        .orderBy(desc(apiAnalytics.date));
+    }
+
+    return await db
       .select()
       .from(apiAnalytics)
       .where(gte(apiAnalytics.date, cutoffTime))
       .orderBy(desc(apiAnalytics.date));
-
-    if (endpoint) {
-      query = query.where(eq(apiAnalytics.endpoint, endpoint));
-    }
-
-    return await query;
   }
 
   async getDashboardStats(): Promise<{
