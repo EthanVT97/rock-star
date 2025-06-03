@@ -53,10 +53,17 @@ class ProxyServer {
 
     setupRoutes() {
         // Apply proxy middleware to all routes except health and stats
-        this.app.use(['!/health', '!/stats'], proxyMiddleware);
+        this.app.use((req, res, next) => {
+            // Skip proxy for health and stats endpoints
+            if (req.path === '/health' || req.path === '/stats') {
+                return next();
+            }
+            // Apply proxy middleware for all other routes
+            proxyMiddleware(req, res, next);
+        });
 
         // Catch-all route for undefined endpoints
-        this.app.use('*', (req, res) => {
+        this.app.use((req, res) => {
             logger.warn(`Route not found: ${req.method} ${req.originalUrl}`);
             res.status(404).json({
                 error: 'Route not found',

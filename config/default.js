@@ -5,18 +5,18 @@ require('dotenv').config();
 
 const config = {
     server: {
-        port: parseInt(process.env.PORT, 10) || 8000,
+        port: parseInt(process.env.PORT, 10) || 5000,
         host: process.env.HOST || '0.0.0.0',
         bodyLimit: process.env.BODY_LIMIT || '10mb'
     },
     
     proxy: {
         // Default target URL for proxying requests
-        target: process.env.PROXY_TARGET || 'http://localhost:3000',
+        target: process.env.PROXY_TARGET || 'https://httpbin.org',
         
         // Proxy configuration options
         changeOrigin: process.env.PROXY_CHANGE_ORIGIN === 'true' || true,
-        secure: process.env.PROXY_SECURE === 'true' || false,
+        secure: process.env.PROXY_SECURE === 'true' || true,
         
         // Timeout settings (in milliseconds)
         timeout: parseInt(process.env.PROXY_TIMEOUT, 10) || 30000,
